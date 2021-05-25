@@ -11,11 +11,11 @@ final class ViewController: UIViewController {
 
     //MARK: - Propertis
     
-    var cities = [
+    private var cities = [
         City(name: "Samara", isCheck: false),
-        City(name: "Piter", isCheck: true),
+        City(name: "Piter", isCheck: false),
         City(name: "Moscow", isCheck: false),
-        City(name: "Vladivostok", isCheck: true),
+        City(name: "Vladivostok", isCheck: false),
         City(name: "Ishim", isCheck: false),
         City(name: "Anapa", isCheck: false),
         City(name: "Murmansk", isCheck: false),
@@ -28,7 +28,7 @@ final class ViewController: UIViewController {
         let table = UITableView()
         table.delegate = self
         table.dataSource = self
-        table.register(CityCell.self, forCellReuseIdentifier: "cell")
+        table.register(CityCell.self, forCellReuseIdentifier: CityCell.reuseID)
         table.tableFooterView = UIView()
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -51,9 +51,6 @@ final class ViewController: UIViewController {
         let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPress))
         navigationItem.rightBarButtonItem = addItem
         
-        let reorderItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(reorderButtonPress))
-        navigationItem.leftBarButtonItem = reorderItem
-        
         view.addSubview(table)
         NSLayoutConstraint.activate([
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -63,11 +60,11 @@ final class ViewController: UIViewController {
         ])
     }
     
-    @objc func reorderButtonPress() {
+    @objc private func reorderButtonPress() {
         table.isEditing.toggle()
     }
     
-    @objc func addButtonPress() {
+    @objc private func addButtonPress() {
         showAlert(title: "Enter") { cityName in
             self.addNewCity(name: cityName)
         }
@@ -117,7 +114,7 @@ extension ViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CityCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CityCell.reuseID, for: indexPath) as! CityCell
         cell.set(city: cities[indexPath.row])
         cell.cellAction = { [weak self] cell in
             if let strongSelf = self,
@@ -142,34 +139,5 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        cities.insert(cities.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completion) in
-            self.cities.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completion(true)
-        }
-        deleteAction.image = UIImage(systemName: "trash")
-        deleteAction.backgroundColor = .red
-        return UISwipeActionsConfiguration(actions: [deleteAction])
-    }
-    
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let renameAction = UIContextualAction(style: .normal, title: nil) { (_, _, complete) in
-            self.renameCityName(for: indexPath.row)
-            complete(true)
-        }
-        renameAction.image = UIImage(systemName: "pencil")
-        renameAction.backgroundColor = .orange
-        return UISwipeActionsConfiguration(actions: [renameAction])
     }
 }

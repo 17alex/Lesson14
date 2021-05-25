@@ -10,7 +10,8 @@ import UIKit
 final class CityCell: UITableViewCell {
 
     //MARK: - Propertis
-    
+
+    static var reuseID: String { return self.description() }
     var cellAction: ((CityCell) -> Void)?
     
      private let cityNameLabel: UILabel = {
