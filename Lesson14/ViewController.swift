@@ -119,7 +119,13 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CityCell
         cell.set(city: cities[indexPath.row])
-        cell.delegate = self
+        cell.cellAction = { [weak self] cell in
+            if let strongSelf = self,
+               let indexPath = strongSelf.table.indexPath(for: cell) {
+                strongSelf.cities[indexPath.row].isCheck.toggle()
+                strongSelf.table.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
         return cell
     }
 }
@@ -165,17 +171,5 @@ extension ViewController: UITableViewDelegate {
         renameAction.image = UIImage(systemName: "pencil")
         renameAction.backgroundColor = .orange
         return UISwipeActionsConfiguration(actions: [renameAction])
-    }
-}
-
-//MARK: - CityCellProtocol
-
-extension ViewController: CityCellProtocol {
-    
-    func didCheckPress(cell: UITableViewCell) {
-        if let indexPath = table.indexPath(for: cell) {
-            cities[indexPath.row].isCheck.toggle()
-            table.reloadRows(at: [indexPath], with: .automatic)
-        }
     }
 }

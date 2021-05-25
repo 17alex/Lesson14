@@ -7,16 +7,11 @@
 
 import UIKit
 
-protocol CityCellProtocol: AnyObject {
-    func didCheckPress(cell: UITableViewCell)
-}
-
-class CityCell: UITableViewCell {
+final class CityCell: UITableViewCell {
 
     //MARK: - Propertis
     
-    private var city: City!
-    weak var delegate: CityCellProtocol?
+    var cellAction: ((CityCell) -> Void)?
     
      private let cityNameLabel: UILabel = {
         let label = UILabel()
@@ -62,7 +57,7 @@ class CityCell: UITableViewCell {
     //MARK: - Metods
     
     @objc private func checkButtonPress() {
-        delegate?.didCheckPress(cell: self)
+        cellAction?(self)
     }
     
     func set(city: City) {
