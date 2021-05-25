@@ -15,7 +15,6 @@ final class CityCell: UITableViewCell {
     
      private let cityNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "test"
         label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -23,12 +22,8 @@ final class CityCell: UITableViewCell {
     
     private lazy var chekButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("check", for: .normal)
         button.addTarget(self, action: #selector(checkButtonPress), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.cornerRadius = 5
         return button
     }()
 
@@ -62,6 +57,8 @@ final class CityCell: UITableViewCell {
     
     func set(city: City) {
         cityNameLabel.text = city.name
-        chekButton.backgroundColor = city.isCheck ? .systemGreen : .systemGray4
+        contentView.backgroundColor = city.isCheck ? .systemGreen : .white
+        let image = UIImage(systemName: city.isCheck ? "checkmark.circle" : "circle")
+        chekButton.setImage(image, for: .normal)
     }
 }
