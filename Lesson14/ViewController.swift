@@ -60,10 +60,6 @@ final class ViewController: UIViewController {
         ])
     }
     
-    @objc private func reorderButtonPress() {
-        table.isEditing.toggle()
-    }
-    
     @objc private func addButtonPress() {
         showAlert(title: "Enter") { cityName in
             self.addNewCity(name: cityName)
