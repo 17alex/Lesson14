@@ -77,13 +77,6 @@ final class ViewController: UIViewController {
         table.scrollToRow(at: indexPath, at: .top, animated: true)
     }
     
-    private func renameCityName(for index: Int) {
-        showAlert(title: "Rename") { cityName in
-            self.cities[index].name = cityName
-            self.table.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        }
-    }
-    
     private func showAlert(title: String, complete: @escaping (String) -> Void) {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
